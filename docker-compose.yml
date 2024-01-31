@@ -1,0 +1,19 @@
+version: '24.0'
+
+services:
+  database:
+    image: postgres
+    container_name: intratec
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+    - POSTGRES_USER=admin
+    - POSTGRES_PASSWORD=31IG38KMRa
+    - POSTGRES_DB=intratec
+    volumes:
+    - pgdata:/data/postgres
+
+volumes:
+  pgdata:
+    driver: local
