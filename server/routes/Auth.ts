@@ -28,24 +28,40 @@ authRouter.post("/register", async (req: Request, res: Response) => {
   }
 });
 
-authRouter.post("/login", async (req: Request, res: Response) => {
+authRouter.post("/auth", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (!user || user.password !== password) {
-      return res.status(401).json({ error: "Invalid credentials" });
+    if (!email || password !== password) {
+      return res.status(401).json({ message: "Credenciais invalidas" });
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET || "your-secret-key");
+    const user = await prisma.user.findUnique({
+      where: { 
+        email: email,
+       },
+    });
 
-    res.json({ token });
+  if(user){
+
+    const expiresIn = 60 * 60; 
+
+    const token = jwt.sign({ user }, user.password, { expiresIn });
+
+    res.status(200).json({
+      token: `${token}`,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } else{
+    res.status(401).json({ message: "Credenciais invalidas" });
+  }
   } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Erro de autenticação:", error);
+    res.status(500).json({ message: "Erro de autenticação" });
   }
 });
 
