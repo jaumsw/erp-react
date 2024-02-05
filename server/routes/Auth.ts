@@ -37,34 +37,55 @@ authRouter.post("/auth", async (req: Request, res: Response) => {
     }
 
     const user = await prisma.user.findUnique({
-      where: { 
+      where: {
         email: email,
-       },
-    });
-
-  if(user){
-
-    const expiresIn = 60 * 60; 
-
-    const token = jwt.sign({ user }, user.password, { expiresIn });
-
-    res.status(200).json({
-      token: `${token}`,
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
       },
     });
-  } else{
-    res.status(401).json({ message: "Credenciais invalidas" });
-  }
+
+    if (user) {
+      if(user.password === password) {
+        const expiresIn = 60 * 60;
+
+        const token = jwt.sign({ user }, user.password, { expiresIn });
+
+        res.status(200).json({
+          token: `${token}`,
+          user: {
+            id: user.id,
+            username: user.username,
+            fullname: user.fullname,
+            email: user.email,
+          },
+        });
+      } else{
+        res.status(401).json({ message: "Credenciais invalidas" });
+      }
+    } else {
+      res.status(401).json({ message: "Credenciais invalidas" });
+    }
   } catch (error) {
     console.error("Erro de autenticação:", error);
     res.status(500).json({ message: "Erro de autenticação" });
   }
 });
 
-// Adicione outras rotas conforme necessário
+authRouter.get("/user", async (req: Request, res: Response) => {
+  try {
+    const authorizationHeader = req.headers.authorization;
 
+    if (!authorizationHeader) {
+      return res.status(401).json({ message: "Token invalido" });
+    }
+
+    const token = authorizationHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Token invalido" });
+    }
+    const data = jwt.decode(token);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: "Erro de buscar dados do usuario" });
+
+  }
+})
 export default authRouter;

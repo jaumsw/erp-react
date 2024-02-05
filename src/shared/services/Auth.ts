@@ -33,14 +33,15 @@ export const authenticateUser = async ({ email, password }: AuthenticateInterfac
 }
 
 export async function recoverUserInformation(token: string) {
+    await delay(1000);
+
     const headers = {
         Authorization: `Bearer ${token}`
     };
 
     try {
-        const response = await axios.get("http://localhost:8999/user", { headers });
+        const response = await axios.get("http://localhost:8099/user", { headers });
         const data = response.data;
-        console.log(data);
         return data.user;
     } catch (error) {
         console.error("Erro ao recuperar informações do usuário", error);
