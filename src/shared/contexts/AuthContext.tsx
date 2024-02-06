@@ -24,6 +24,7 @@ interface AuthContextProps {
 export const AuthContext = createContext({} as AuthContextProps);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+    const delay = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
 	const [user, setUser] = useState< User | null>(null);
 
@@ -39,10 +40,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },[])
   
     const authenticateUser = async ({email, password}: AuthenticateInterface) => {
-            const response = await axios.post("http://localhost:8999/auth", {
-                username: email,
-                password: password,
-            });
+
+        await delay(1000);
+        
+        const response = await axios.post("http://localhost:8099/auth", {
+            email: email,
+            password: password,
+        });
       
             if (response.status === 200) {
                 const token = response.data.token;

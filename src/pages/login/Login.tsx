@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import {authenticateUser} from '../../shared/services/Auth'
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form'
 import  Swal from "sweetalert2";
 import logo from './logo.png'
+import { AuthContext } from '@/shared/contexts/AuthContext';
 
 interface handleForm{
     email: string
@@ -10,16 +11,15 @@ interface handleForm{
 }
 
 export const Login = () => {
+    const { authenticateUser } = useContext(AuthContext)
     const navigate = useNavigate()
-
+    
     const { register, handleSubmit } = useForm<handleForm>()
 
     const showLoader = () => {
         const loaderContainer = document.getElementById('hidden');
     
-        // Verifica se o elemento com o ID 'hidden' existe antes de adicionar o loader
         if (loaderContainer) {
-            // Cria a div do loader
             const loaderDiv = document.createElement('div');
             loaderDiv.classList.add('text-center');
     
