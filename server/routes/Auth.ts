@@ -47,7 +47,7 @@ authRouter.post("/auth", async (req: Request, res: Response) => {
         const expiresIn = 60 * 60;
 
         const token = jwt.sign({ user }, user.password, { expiresIn });
-
+        console.log(token)
         res.status(200).json({
           token: `${token}`,
           user: {

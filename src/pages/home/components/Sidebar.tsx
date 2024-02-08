@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   HomeIcon,
   ChevronDownIcon,
@@ -9,17 +9,21 @@ import {
   PowerIcon,
 } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
-  
-const Sidebar = ({children}: {children: React.ReactNode}) => {
+import { AuthContext } from "@/shared/contexts/AuthContext";
+
+const Sidebar = ({ children }: { children: React.ReactNode }) => {
+  const { signOutUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const [selectedTab, setSelectedTab] = useState("Home");
-  const [openSubMenus, setOpenSubMenus] = useState<{ [key: number]: boolean }>({});
+  const [openSubMenus, setOpenSubMenus] = useState<{ [key: number]: boolean }>(
+    {}
+  );
 
   const handleTabClick = (tab: string) => {
     setSelectedTab(tab);
   };
-  
+
   const toggleSubMenu = (menuIndex: number) => {
     setOpenSubMenus((prevOpenSubMenus) => ({
       ...prevOpenSubMenus,
@@ -38,8 +42,7 @@ const Sidebar = ({children}: {children: React.ReactNode}) => {
       submenuItems: [
         { title: "Criar Pedido" },
         { title: "Vizualizar Pedidos" },
-        
-      ]
+      ],
     },
     {
       title: "Produtos",
@@ -51,7 +54,6 @@ const Sidebar = ({children}: {children: React.ReactNode}) => {
         { title: "Cadastrar Produtos" },
         { title: "Excluir Produtos" },
         { title: "Alterar de Produtos" },
-
       ],
     },
     {
@@ -125,11 +127,13 @@ const Sidebar = ({children}: {children: React.ReactNode}) => {
                 className={`text-sm font-semibold relative flex items-center gap-x-3 p-4 cursor-pointer hover:bg-blue-700 rounded-md m-4 ${
                   selectedTab === menu.title && "bg-blue-700"
                 }`}
-              onClick={() => { if (!menu.submenu) {
-                navigate(menu.path); // Adicione esta linha
-              } else {
-                toggleSubMenu(index);
-              }}}
+                onClick={() => {
+                  if (!menu.submenu) {
+                    navigate(menu.path);
+                  } else {
+                    toggleSubMenu(index);
+                  }
+                }}
               >
                 <span className="text-white">{menu.icon}</span>
                 <span className={`text-white ${!open && "hidden"}`}>
@@ -139,16 +143,18 @@ const Sidebar = ({children}: {children: React.ReactNode}) => {
                   <ChevronDownIcon
                     className="h-5 w-5 text-white ml-16"
                     onClick={() => handleTabClick(menu.title)}
-                    />
+                  />
                 )}
               </li>
               {menu.submenu && openSubMenus[index] && (
                 <ul>
-                {menu.submenuItems?.map((submenu, submenuIndex) => (
+                  {menu.submenuItems?.map((submenu, submenuIndex) => (
                     <li
-                    key={submenuIndex}
-                    className={`text-sm font-semibold relative flex items-center gap-x-3 p-4 ${open ? "" : "hidden"} cursor-pointer text-white ml-3 hover:bg-blue-700 rounded-md m-4`}
-                    onClick={() => {
+                      key={submenuIndex}
+                      className={`text-sm font-semibold relative flex items-center gap-x-3 p-4 ${
+                        open ? "" : "hidden"
+                      } cursor-pointer text-white ml-3 hover:bg-blue-700 rounded-md m-4`}
+                      onClick={() => {
                         navigate(`${menu.path}/${submenu.title.toLowerCase()}`);
                       }}
                     >
@@ -159,7 +165,10 @@ const Sidebar = ({children}: {children: React.ReactNode}) => {
               )}
             </>
           ))}
-          <li className="text-sm font-semibold flex items-center gap-x-3 p-4 cursor-pointer hover:bg-blue-700 rounded-md m-4 ">
+          <li
+            className="text-sm font-semibold flex items-center gap-x-3 p-4 cursor-pointer hover:bg-blue-700 rounded-md m-4 "
+            onClick={() => signOutUser()}
+          >
             <span className="text-white">
               <PowerIcon className="h-5 w-5" />
             </span>
@@ -167,7 +176,7 @@ const Sidebar = ({children}: {children: React.ReactNode}) => {
           </li>
         </ul>
       </nav>
-    {children}
+      {children}
     </div>
   );
 };

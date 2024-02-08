@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const delay = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
 	const [user, setUser] = useState< User | null>(null);
-
+    
     const isAuthenticated = !!user;
     
     useEffect(() => {
@@ -43,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         await delay(1000);
         
-        const response = await axios.post("http://localhost:8099/auth", {
+        const response = await axios.post("http://localhost:8099/api/auth", {
             email: email,
             password: password,
         });

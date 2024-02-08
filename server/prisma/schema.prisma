@@ -17,3 +17,15 @@ model User {
   email    String   @unique
   password String
 }
+
+model Leads {
+  id Int @id @default(autoincrement())
+  name String
+  email String
+  data String
+  contato String
+  origem_lead String
+  categoria String
+  consultor String
+  status Int 
+}

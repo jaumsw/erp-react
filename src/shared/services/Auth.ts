@@ -12,7 +12,7 @@ export const authenticateUser = async ({ email, password }: AuthenticateInterfac
 
     await delay(1000);
 
-    const response = await axios.post("http://localhost:8099/auth", {
+    const response = await axios.post("http://localhost:8099/api/auth", {
         email: email,
         password: password,
     });
@@ -40,7 +40,7 @@ export async function recoverUserInformation(token: string) {
     };
 
     try {
-        const response = await axios.get("http://localhost:8099/user", { headers });
+        const response = await axios.get("http://localhost:8099/api/user", { headers });
         const data = response.data;
         return data.user;
     } catch (error) {

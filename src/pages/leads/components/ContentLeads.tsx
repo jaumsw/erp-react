@@ -15,7 +15,9 @@ export const ContentLeads = () => {
           Um ótimo dia para você!!
         </span>
       </div>
+      <div className="flex h-auto">
       <KanbanBoard/>
+      </div>
     </div>
   );
 };
