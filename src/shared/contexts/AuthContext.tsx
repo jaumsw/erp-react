@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 const user = response.data.user.username;
     
                 setCookie(null, "token", token, {
-                    maxAge: 60 * 60 * 1 // 1 hour
+                    maxAge: 60 * 60 * 1 
                 })
                 
                 setUser(user);

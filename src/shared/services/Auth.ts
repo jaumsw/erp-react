@@ -33,7 +33,6 @@ export const authenticateUser = async ({ email, password }: AuthenticateInterfac
 }
 
 export async function recoverUserInformation(token: string) {
-    await delay(1000);
 
     const headers = {
         Authorization: `Bearer ${token}`

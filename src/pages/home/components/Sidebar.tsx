@@ -67,8 +67,8 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
     <div className={`flex bg-zinc-200 min-h-screen`}>
       <nav
         className={`${
-          open ? "w-72" : "w-20"
-        } md:min-h-screen h-full bg-blue-800 relative duration-200 shadow-lg`}
+          open ? "w-64" : "w-20"
+        } md:min-h-screen h-auto bg-blue-800 relative duration-200 shadow-lg`}
       >
         <button
           className={`w-8 h-8 border-2 rounded-full mt-4 ml-auto bg-zinc-100 text-blue-600 hover:text-white hover:bg-blue-500 absolute -right-3 ${

@@ -6,7 +6,7 @@ export const ContentLeads = () => {
     const { user } = useContext(AuthContext);
     
   return (
-    <div className="ml-6 mt-16 w-full  pr-4">
+    <div className="ml-6 mt-16 min-w-[20rem] pr-4">
       <span className="text-xl font-semibold px-2 pt-5">
         Olá, <span>{user?.fullname}</span>
       </span>
