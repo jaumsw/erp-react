@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/shared/contexts/AuthContext";
 
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
-  const { signOutUser } = useContext(AuthContext);
+  const { signOutUser, isAdmin } = useContext(AuthContext);
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const [selectedTab, setSelectedTab] = useState("Home");
@@ -41,24 +41,25 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
       submenu: true,
       submenuItems: [
         { title: "Criar Pedido" },
-        { title: "Vizualizar Pedidos" },
-      ],
+        { title: "Listar Pedidos" },
+        isAdmin && { title: "Excluir Pedido" },
+        isAdmin && { title: "Alterar Pedido" },
+      ].filter(Boolean)
     },
     {
       title: "Produtos",
       icon: <ShoppingCartIcon className="h-5 w-5" />,
-      path: "/",
+      path: "/produtos",
       submenu: true,
       submenuItems: [
-        { title: "Vizualizar Produtos" },
-        { title: "Cadastrar Produtos" },
-        { title: "Excluir Produtos" },
-        { title: "Alterar de Produtos" },
-      ],
+        { title: "Listar Produtos" },
+        isAdmin && { title: "Excluir Produtos" },
+        isAdmin && { title: "Alterar Produtos" },
+      ].filter(Boolean),
     },
     {
       title: "Contratos",
-      path: "/",
+      path: "/contratos",
       icon: <DocumentTextIcon className="h-5 w-5" />,
     },
   ];
@@ -124,7 +125,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
             <>
               <li
                 key={index}
-                className={`text-sm font-semibold relative flex items-center gap-x-3 p-4 cursor-pointer hover:bg-blue-700 rounded-md m-4 ${
+                className={`text-base font-semibold relative flex items-center gap-x-3 p-4 cursor-pointer hover:bg-blue-700 rounded-md m-4 ${
                   selectedTab === menu.title && "bg-blue-700"
                 }`}
                 onClick={() => {
@@ -151,11 +152,11 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
                   {menu.submenuItems?.map((submenu, submenuIndex) => (
                     <li
                       key={submenuIndex}
-                      className={`text-sm font-semibold relative flex items-center gap-x-3 p-4 ${
+                      className={`text-base font-semibold relative flex items-center gap-x-3 p-4 ${
                         open ? "" : "hidden"
                       } cursor-pointer text-white ml-3 hover:bg-blue-700 rounded-md m-4`}
                       onClick={() => {
-                        navigate(`${menu.path}/${submenu.title.toLowerCase()}`);
+                        navigate(`${menu.path}/${submenu.title.toLowerCase().replace(/\s+/g, '-')}`);
                       }}
                     >
                       {submenu.title}
@@ -166,7 +167,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
             </>
           ))}
           <li
-            className="text-sm font-semibold flex items-center gap-x-3 p-4 cursor-pointer hover:bg-blue-700 rounded-md m-4 "
+            className="text-base font-semibold flex items-center gap-x-3 p-4 cursor-pointer hover:bg-blue-700 rounded-md m-4 "
             onClick={() => signOutUser()}
           >
             <span className="text-white">

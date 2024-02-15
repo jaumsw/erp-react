@@ -1,7 +1,7 @@
 import { AuthContext } from "@/shared/contexts/AuthContext";
 import { useContext } from "react";
 import { KanbanBoard } from "./KanbanBoard";
-
+import FilterAndSearch from "./FilterAndSearch";
 export const ContentLeads = () => { 
     const { user } = useContext(AuthContext);
     
@@ -15,7 +15,8 @@ export const ContentLeads = () => {
           Um ótimo dia para você!!
         </span>
       </div>
-      <div className="flex h-auto">
+      <FilterAndSearch/>
+      <div className="flex h-auto">    
       <KanbanBoard/>
       </div>
     </div>

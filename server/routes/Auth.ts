@@ -10,7 +10,7 @@ const authRouter = Router();
 
 authRouter.post("/register", async (req: Request, res: Response) => {
   try {
-    const { username, fullname, email, password } = req.body;
+    const { username, fullname, email, password, admin } = req.body;
 
     const user = await prisma.user.create({
       data: {
@@ -18,6 +18,7 @@ authRouter.post("/register", async (req: Request, res: Response) => {
         fullname,
         email,
         password,
+        admin
       },
     });
 
@@ -55,6 +56,7 @@ authRouter.post("/auth", async (req: Request, res: Response) => {
             username: user.username,
             fullname: user.fullname,
             email: user.email,
+            admin: user.admin
           },
         });
       } else{

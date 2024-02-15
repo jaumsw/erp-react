@@ -16,6 +16,38 @@ import {
 import { useEffect, useState } from "react";
 import { UpdateLeadCategory, getLeads } from "@/shared/services/LeadsService";
 import { LeadsI, LeadItem } from "@/shared/types/types";
+import { Button } from "@/components/ui/button";
+
+function getStatusText(status: number) {
+  switch (status) {
+    case 1:
+      return "Em Negociação";
+    case 2:
+      return "Sem Resposta";
+    case 3:
+      return "Venda";
+    case 4:
+      return "Perda";
+
+    default:
+      return "Status Desconhecido";
+  }
+}
+
+function getStatusColor(status: number) {
+  switch (status) {
+    case 1:
+      return "text-blue-500";
+    case 2:
+      return "text-black-500";
+    case 3:
+      return "text-green-500";
+    case 4:
+      return "text-red-500";
+    default:
+      return "text-gray-500";
+  }
+}
 
 export const KanbanBoard: React.FC = () => {
   const [leads, setLeads] = useState<LeadsI[]>([]);
@@ -28,15 +60,14 @@ export const KanbanBoard: React.FC = () => {
   };
 
   const closeDialog = () => {
-    setDialogOpen(false);
     setSelectedItem(null);
+    setDialogOpen(false);
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const leadsData = await getLeads();
-        console.log(leadsData);
         setLeads(leadsData || []);
       } catch (error) {
         console.error("Error fetching leads:", error);
@@ -85,10 +116,12 @@ export const KanbanBoard: React.FC = () => {
       <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="font-semibold mb-2">
+            <DialogTitle className="font-semibold mb-2 text-blue-500 text-xl">
               Detalhes do Lead
             </DialogTitle>
-            <DialogDescription>Confira os detalhes do lead</DialogDescription>
+            <DialogDescription className="text-blue-500 text-base">
+              Confira os detalhes do lead
+            </DialogDescription>
           </DialogHeader>
           <div className="items-center justify-center flex">
             <button className="rounded-full bg-white p-2 border-2 border-blue-500 hover:bg-blue-500 hover:text-white mr-3 duration-100">
@@ -96,7 +129,7 @@ export const KanbanBoard: React.FC = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                strokeWidth="1.5"
                 stroke="currentColor"
                 className="w-[19px] h-[19px]"
               >
@@ -112,7 +145,7 @@ export const KanbanBoard: React.FC = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                strokeWidth="1.5"
                 stroke="currentColor"
                 className="w-[19px] h-[19px]"
               >
@@ -127,35 +160,58 @@ export const KanbanBoard: React.FC = () => {
           <div className="mt-6">
             {selectedItem && (
               <>
+                <div className="flex">
+                  <span className="text-base mr-7 mb-2">
+                    Data:{" "}
+                    <span className="text-base font-semibold text-blue-500 ml-1">
+                      {new Date(selectedItem.data).toLocaleDateString()}
+                    </span>
+                  </span>
+                </div>
                 <span className="text-base mr-7">
-                  Data:{" "}
-                  <span className="text-base font-semibold">
-                    {selectedItem.data}
+                  Nome: {""}
+                  <span className="ml-1 text-base font-semibold text-blue-500 w-24">
+                    {selectedItem.name}
                   </span>
                 </span>
                 <span className="text-base mr-7">
                   Origem:{" "}
-                  <span className="text-base font-semibold">
+                  <span className="ml-1 text-base font-semibold text-blue-500">
                     {selectedItem.origem}
                   </span>
                 </span>
                 <span className="text-base mr-7">
                   Status:{" "}
-                  <span className="text-base font-semibold">
-                    {selectedItem.status}
+                  <span
+                    className={`ml-1 text-base font-semibold ${getStatusColor(
+                      selectedItem.status
+                    )}`}
+                  >
+                    {getStatusText(selectedItem.status)}
                   </span>
                 </span>
+                <div className="flex ">
+                  <span className="text-base mr-7 mt-2">
+                    Contato do Lead:{" "}
+                    <span
+                      className={`ml-1 text-base font-semibold text-blue-500 `}
+                    >
+                      {selectedItem.contato}
+                    </span>
+                  </span>
+                </div>
               </>
             )}
+            <div className="p-3 bg-zinc-300 rounded-lg mt-3 h-20"></div>
           </div>
-          {/*  {selectedItem && (
-          <>
-            <span className="text-base font-semibold">{selectedItem.name}</span>
-            <span>{selectedItem.data}</span>
-            <span>{selectedItem.email}</span>
-            <span>{selectedItem.origem}</span>
-          </>
-        )} */}
+          <DialogFooter>
+            <Button type="button" className="bg-blue-500 text-white hover:bg-blue-700" onClick={closeDialog}>
+              Fechar
+            </Button>
+            <Button type="submit" className="bg-green-600 text hover:bg-green-800">
+              Salvar
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 

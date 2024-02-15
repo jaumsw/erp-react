@@ -12,12 +12,14 @@ interface User {
     username: string;
     email: string;
     fullname: string;
+    isAdmin: boolean;
 }
 
 interface AuthContextProps {
    signOutUser: () => void;
    user: User | null;
    isAuthenticated: boolean;
+   isAdmin: boolean;
    authenticateUser: ({email, password}: AuthenticateInterface) => Promise<{ success: boolean, message: string }>;
 }
 
@@ -27,14 +29,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const delay = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
 	const [user, setUser] = useState< User | null>(null);
-    
+    const [isAdmin, setIsAdmin] = useState(false);
     const isAuthenticated = !!user;
-    
+
     useEffect(() => {
         const { token } = parseCookies();
         if(token){
             recoverUserInformation(token).then(response => {
                 setUser(response);
+                if(response.admin === 0){
+                    setIsAdmin(true);
+                }else{
+                    setIsAdmin(false);
+                }
             })
         }
     },[])
@@ -51,7 +58,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             if (response.status === 200) {
                 const token = response.data.token;
                 const user = response.data.user.username;
-    
+                const admin = response.data.user.admin;
+
+                if(admin === 0 ){
+                    setIsAdmin(true);
+                }
+                else{
+                    setIsAdmin(false);
+                }
                 setCookie(null, "token", token, {
                     maxAge: 60 * 60 * 1 
                 })
@@ -67,10 +81,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const signOutUser = async ( ) => {
         setUser(null);
         destroyCookie(null, 'token');
+        setIsAdmin(false)
         window.location.reload();
     }
 	return (
-		<AuthContext.Provider value={{ user, isAuthenticated, authenticateUser, signOutUser }}>
+		<AuthContext.Provider value={{ user, isAdmin, isAuthenticated, authenticateUser, signOutUser }}>
 			{children}
 		</AuthContext.Provider>
 	);

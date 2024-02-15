@@ -19,7 +19,8 @@ import {
   import { AuthContext } from "@/shared/contexts/AuthContext";
   
   const ContentHome = () => {
-    const { user } = useContext(AuthContext);
+    const { user, isAdmin } = useContext(AuthContext);
+    console.log(isAdmin);
     const [date, setDate] = useState<DateRange | undefined>({
       from: new Date(2024, 0, 20),
       to: addDays(new Date(2024, 0, 20), 20),
@@ -106,6 +107,7 @@ import {
           <div className="w-1/2 h-72 flex bg-zinc-100 rounded-xl shadow-md mt-11 mr-9"></div>
           <div className="w-1/2 h-72 flex bg-zinc-100 rounded-xl shadow-md mt-11"></div>
         </div>
+        <div className="w-full h-96 flex bg-zinc-100 rounded-xl shadow-md mt-11"></div>
       </div>
     );
   };
