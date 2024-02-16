@@ -1,9 +1,10 @@
-import Home from "./pages/home/Home";
-import Leads from "./pages/leads/Leads";
-import PrivateRoutes from "./shared/components/PrivateRoutes";
+import { PrivateRoutes, AdminRoutes } from "./shared/components/PrivateRoutes";
 import { Login } from "./pages/login/Login";
 import { AuthProvider } from "./shared/contexts/AuthContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Users from "./pages/users/Users";
+import Home from "./pages/home/Home";
+import Leads from "./pages/leads/Leads";
 import CreateOrder from "./pages/orders/create-order/CreateOrder";
 import ListOrders from "./pages/orders/list-orders/ListOrders";
 import ListProducts from "./pages/products/list-products/ListProducts";
@@ -19,6 +20,9 @@ export function App() {
             <Route path="/pedidos/criar-pedido" element={<CreateOrder />} />
             <Route path="/pedidos/listar-pedidos" element={<ListOrders />} />
             <Route path="/produtos/listar-produtos" element={<ListProducts />} />
+          </Route>
+          <Route element={<AdminRoutes />}>
+            <Route path="/usuarios" element={<Users />} />
           </Route>
           <Route path="*" element={<Login />} />
         </Routes>

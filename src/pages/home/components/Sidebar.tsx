@@ -1,25 +1,31 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   HomeIcon,
   ChevronDownIcon,
   RectangleStackIcon,
   ShoppingCartIcon,
   UsersIcon,
+  UserGroupIcon,
   DocumentTextIcon,
   PowerIcon,
 } from "@heroicons/react/24/outline";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "@/shared/contexts/AuthContext";
+
+type MenuItem = { title: string; path: string; icon: JSX.Element; submenu?: boolean; submenuItems?: MenuItem[] };
 
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const { signOutUser, isAdmin } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Home");
   const [openSubMenus, setOpenSubMenus] = useState<{ [key: number]: boolean }>(
     {}
   );
+  const location = useLocation();
 
+
+  
   const handleTabClick = (tab: string) => {
     setSelectedTab(tab);
   };
@@ -32,6 +38,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
   };
 
   const Menus = [
+    isAdmin && { title: "Usuarios", path: "/usuarios", icon: <UserGroupIcon className="h-5 w-5" /> },
     { title: "Home", path: "/home", icon: <HomeIcon className="h-5 w-5" /> },
     { title: "Leads", path: "/leads", icon: <UsersIcon className="h-5 w-5" /> },
     {
@@ -44,7 +51,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
         { title: "Listar Pedidos" },
         isAdmin && { title: "Excluir Pedido" },
         isAdmin && { title: "Alterar Pedido" },
-      ].filter(Boolean)
+      ].filter(Boolean) as MenuItem[]
     },
     {
       title: "Produtos",
@@ -55,15 +62,23 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
         { title: "Listar Produtos" },
         isAdmin && { title: "Excluir Produtos" },
         isAdmin && { title: "Alterar Produtos" },
-      ].filter(Boolean),
+      ].filter(Boolean) as MenuItem[],
     },
     {
       title: "Contratos",
       path: "/contratos",
       icon: <DocumentTextIcon className="h-5 w-5" />,
     },
-  ];
+  ].filter(Boolean) as MenuItem[];
 
+  useEffect(() => {
+    const activeMenu = Menus.find((menu) => location.pathname.startsWith(menu.path));
+
+    if (activeMenu) {
+      setSelectedTab(activeMenu.title);
+    }
+  }, [location.pathname, Menus]);
+  
   return (
     <div className={`flex bg-zinc-200 min-h-screen`}>
       <nav

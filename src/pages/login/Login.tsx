@@ -116,7 +116,7 @@ export const Login = () => {
                         Email
                     </label>
               </div>
-              <div className="roudened-md shadow-sm -space-y-1 relative mt-5 mb-5">
+              <div className="roudened-md shadow-sm -space-y-1 relative mt-6 mb-5">
                 <input
                 id="password"
                 type="password"

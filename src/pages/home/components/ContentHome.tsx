@@ -20,7 +20,6 @@ import {
   
   const ContentHome = () => {
     const { user, isAdmin } = useContext(AuthContext);
-    console.log(isAdmin);
     const [date, setDate] = useState<DateRange | undefined>({
       from: new Date(2024, 0, 20),
       to: addDays(new Date(2024, 0, 20), 20),

@@ -8,27 +8,6 @@ dotenv.config();
 const prisma = new PrismaClient();
 const authRouter = Router();
 
-authRouter.post("/register", async (req: Request, res: Response) => {
-  try {
-    const { username, fullname, email, password, admin } = req.body;
-
-    const user = await prisma.user.create({
-      data: {
-        username,
-        fullname,
-        email,
-        password,
-        admin
-      },
-    });
-
-    res.status(201).json({ user });
-  } catch (error) {
-    console.error("Error during registration:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
 authRouter.post("/auth", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -71,23 +50,4 @@ authRouter.post("/auth", async (req: Request, res: Response) => {
   }
 });
 
-authRouter.get("/user", async (req: Request, res: Response) => {
-  try {
-    const authorizationHeader = req.headers.authorization;
-
-    if (!authorizationHeader) {
-      return res.status(401).json({ message: "Token invalido" });
-    }
-
-    const token = authorizationHeader.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ message: "Token invalido" });
-    }
-    const data = jwt.decode(token);
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({ message: "Erro de buscar dados do usuario" });
-
-  }
-})
 export default authRouter;

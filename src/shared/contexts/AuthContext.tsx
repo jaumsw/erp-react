@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if(token){
             recoverUserInformation(token).then(response => {
                 setUser(response);
-                if(response.admin === 0){
+                if(response?.admin === 0){
                     setIsAdmin(true);
                 }else{
                     setIsAdmin(false);
